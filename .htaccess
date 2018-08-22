@@ -1,0 +1,105 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  RewriteCond %{SERVER_PORT} 80
+  #RewriteCond %{HTTP:X-Forwarded-Proto} =http
+  RewriteRule . https://%{HTTP:Host}%{REQUEST_URI} [L,R=permanent]
+
+  RewriteRule ^index\.html$ - [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . /index.html [L]
+</IfModule>
+
+##
+# Add expires headers for static content
+##
+<IfModule mod_expires.c>
+	ExpiresActive on
+	ExpiresDefault "access plus 1 month"
+   Header append Cache-Control "public"
+
+	# Declare fonts content-type
+	AddType application/vnd.ms-fontobject .eot
+	AddType application/x-font-ttf .ttf
+	AddType application/x-font-opentype .otf
+	AddType application/x-font-woff .woff
+	AddType image/svg+xml .svg
+
+	# Set cache duration
+
+	ExpiresByType application/x-font-woff "access plus 1 year"
+	ExpiresByType application/x-font-ttf "access plus 1 year"
+	ExpiresByType application/vnd.ms-fontobject "access plus 1 year"
+	ExpiresByType application/svg+xml "access plus 1 year"
+	ExpiresByType text/html "access plus 15 days"
+	ExpiresByType image/gif "access plus 1 month"
+	ExpiresByType image/jpg "access plus 1 month"
+	ExpiresByType image/jpeg "access plus 1 month"
+	ExpiresByType image/png "access plus 1 month"
+	ExpiresByType text/js "modification plus 1 month"
+	ExpiresByType text/javascript "modification plus 1 hour"
+</IfModule>
+
+# ----------------------------------------------------------------------
+# Gzip compression
+# Compress content before it is delivered to the client
+# http://httpd.apache.org/docs/2.0/mod/mod_deflate.html
+# ----------------------------------------------------------------------
+
+<IfModule mod_deflate.c>
+	# Force deflate for mangled headers developer.yahoo.com/blogs/ydn/posts/2010/12/pushing-beyond-gzipping/
+	<IfModule mod_setenvif.c>
+		<IfModule mod_headers.c>
+			SetEnvIfNoCase ^(Accept-EncodXng|X-cept-Encoding|X{15}|~{15}|-{15})$ ^((gzip|deflate)\s*,?\s*)+|[X~-]{4,13}$ HAVE_Accept-Encoding
+			RequestHeader append Accept-Encoding "gzip,deflate" env=HAVE_Accept-Encoding
+		</IfModule>
+	</IfModule>
+
+	FilterDeclare	COMPRESS
+	FilterProvider	COMPRESS	DEFLATE	"%{Content_Type} = 'text/html'"
+	FilterProvider	COMPRESS	DEFLATE	"%{Content_Type} = 'text/css'"
+	FilterProvider	COMPRESS	DEFLATE	"%{Content_Type} = 'text/plain'"
+	FilterProvider	COMPRESS	DEFLATE	"%{Content_Type} = 'text/xml'"
+	FilterProvider	COMPRESS	DEFLATE	"%{Content_Type} = 'text/x-component'"
+	FilterProvider	COMPRESS	DEFLATE	"%{Content_Type} = 'application/javascript'"
+	FilterProvider	COMPRESS	DEFLATE	"%{Content_Type} = 'application/json'"
+	FilterProvider	COMPRESS	DEFLATE	"%{Content_Type} = 'application/xml'"
+	FilterProvider	COMPRESS	DEFLATE	"%{Content_Type} = 'application/xhtml+xml'"
+	FilterProvider	COMPRESS	DEFLATE	"%{Content_Type} = 'application/rss+xml'"
+	FilterProvider	COMPRESS	DEFLATE	"%{Content_Type} = 'application/atom+xml'"
+	FilterProvider	COMPRESS	DEFLATE	"%{Content_Type} = 'application/vnd.ms-fontobject'"
+	FilterProvider	COMPRESS	DEFLATE	"%{Content_Type} = 'image/svg+xml'"
+	FilterProvider	COMPRESS	DEFLATE	"%{Content_Type} = 'image/x-icon'"
+	FilterProvider	COMPRESS	DEFLATE	"%{Content_Type} = 'application/x-font-ttf'"
+	FilterProvider	COMPRESS	DEFLATE	"%{Content_Type} = 'font/opentype'"
+	FilterChain	COMPRESS
+	FilterProtocol	COMPRESS	DEFLATE	change=yes;byteranges=no
+
+	# Compress HTML, CSS, JavaScript, Text, XML and fonts
+	AddOutputFilterByType DEFLATE application/javascript
+	AddOutputFilterByType DEFLATE application/rss+xml
+	AddOutputFilterByType DEFLATE application/vnd.ms-fontobject
+	AddOutputFilterByType DEFLATE application/x-font
+	AddOutputFilterByType DEFLATE application/x-font-opentype
+	AddOutputFilterByType DEFLATE application/x-font-otf
+	AddOutputFilterByType DEFLATE application/x-font-truetype
+	AddOutputFilterByType DEFLATE application/x-font-ttf
+	AddOutputFilterByType DEFLATE application/x-javascript
+	AddOutputFilterByType DEFLATE application/xhtml+xml
+	AddOutputFilterByType DEFLATE application/xml
+	AddOutputFilterByType DEFLATE font/opentype
+	AddOutputFilterByType DEFLATE font/otf
+	AddOutputFilterByType DEFLATE font/ttf
+	AddOutputFilterByType DEFLATE image/svg+xml
+	AddOutputFilterByType DEFLATE image/x-icon
+	AddOutputFilterByType DEFLATE text/css
+	AddOutputFilterByType DEFLATE text/html
+	AddOutputFilterByType DEFLATE text/javascript
+	AddOutputFilterByType DEFLATE text/plain
+	AddOutputFilterByType DEFLATE text/xml
+	# Remove browser bugs (only needed for really old browsers)
+	BrowserMatch ^Mozilla/4 gzip-only-text/html BrowserMatch ^Mozilla/4.0[678] no-gzip BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+	Header append Vary User-Agent
+</IfModule>

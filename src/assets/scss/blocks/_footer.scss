@@ -1,0 +1,18 @@
+.site-footer {
+	background-color: white;
+	font-family: $family-sub;
+	font-size: 14px;
+	color: #9B9B9B;
+	letter-spacing: 0;
+	padding: 20px 0;
+
+	.is-not-auth & {
+		& .breadcrumb {
+			// display: none;
+		}
+
+		& .content:not(:last-child) {
+			display: none;
+		}
+	}
+}

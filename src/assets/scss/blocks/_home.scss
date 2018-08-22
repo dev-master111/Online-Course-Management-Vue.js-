@@ -1,0 +1,68 @@
+.site-tutorial {
+	.title {
+		margin-bottom: 10px;
+	}
+
+	.subtitle {
+		font-family: $family-primary;
+		font-size: 16px;
+		color: #9B9B9B;
+		letter-spacing: -0.15px;
+		line-height: 1.5rem;
+		margin-bottom: 40px;
+		margin-top: 0 !important;
+	}
+
+	.vennly-videos {
+		position: relative;
+		max-width: 672px;
+		margin-left: auto;
+		margin-right: auto;
+		box-shadow: 0 20px 20px 0 rgba(0,0,0,0.20);
+
+		+ .control {
+			max-width: 400px;
+			margin-left: auto;
+			margin-right: auto;
+			margin-bottom: 25px;
+
+			.button {
+				width: 100%;
+				border-radius: 0 0 5px 5px;
+				height: 60px;
+				color: #FFFFFF;
+				line-height: 28px;
+				text-transform: uppercase;
+				font-family: $family-sub;
+				font-size: 18px;
+				letter-spacing: 1px;
+				margin: 0 10px;
+
+				svg {
+					margin-left: 8px;
+				}
+
+				&.is-go-back {
+					& svg {
+						transform: rotate(180deg);
+						margin-left: 0px;
+						margin-right: 8px;
+					}
+				}
+			}
+		}
+	}
+
+	.vennly-video {
+		transition: all .2s;
+	}
+
+	.link--skip-tutorial {
+		font-family: $family-sub;
+		font-size: 14px;
+		// color: #0D64D7;
+		text-transform: uppercase;
+		letter-spacing: 0.78px;
+		line-height: 28px;
+	}
+}

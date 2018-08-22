@@ -1,0 +1,9 @@
+.button {
+	&.is-primary {
+		background-image: linear-gradient(-179deg, #4D2DDE 0%, #4D2DDE 98%);
+
+		&:hover {
+			background-image: linear-gradient(-179deg, darken(#4D2DDE, 5%) 0%, darken(#4D2DDE, 5%) 98%);
+		}
+	}
+}
